@@ -32,7 +32,9 @@ async function getAllPokemons(collection) {
           name: s.stat.name,
         };
       }),
-      url: docs.sprites.front_default,
+      url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${
+        i + 1
+      }.svg`,
       species:
         docs.species.name.charAt(0).toUpperCase() + docs.species.name.slice(1),
       moves: docs.moves.map((m) => m.move.name),
