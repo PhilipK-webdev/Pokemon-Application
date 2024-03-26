@@ -1,33 +1,50 @@
 import React from "react";
 import styled from "styled-components";
 
-const SidePanel = ({ onClick }) => {
+const SidePanel = ({ onClick, type }) => {
   return (
     <SidePanelStyles>
-      <div className="tab" onClick={(e) => onClick(e, "info")}>
+      <div
+        className={type === "info" ? "tab-clicked" : "tab"}
+        onClick={(e) => onClick(e, "info")}
+      >
         Info
       </div>
-      <div className="tab" onClick={(e) => onClick(e, "stats")}>
+      <div
+        className={type === "stats" ? "tab-clicked" : "tab"}
+        onClick={(e) => onClick(e, "stats")}
+      >
         Stats
       </div>
-      <div className="tab" onClick={(e) => onClick(e, "moves")}>
+      <div
+        className={type === "moves" ? "tab-clicked" : "tab"}
+        onClick={(e) => onClick(e, "moves")}
+      >
         Moves
       </div>
     </SidePanelStyles>
   );
 };
 const SidePanelStyles = styled.div`
-  width: 10%;
-  background-color: white;
+  width: 20%;
   color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  border-right: 1px solid black;
+  border-right: 4px solid white;
   .tab {
-    text-decoration: underline;
     cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .tab-clicked {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: white;
+    text-decoration-thickness: 3px;
   }
 `;
 

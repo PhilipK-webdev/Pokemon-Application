@@ -2,21 +2,26 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Icon } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 import { colors } from "../../../styles/colors";
 import Dashboard from "./Dashboard";
+import { useEffect } from "react";
 
 const AccordionCard = ({ pokemon, uuid, page }) => {
   const [expanded, setExpanded] = useState(false);
-  const [favorite, setFavorite] = useState(
-    pokemon.favorite ? pokemon.favorite : false
-  );
+  const [favorite, setFavorite] = useState(false);
   const [type, setType] = useState("info");
-  const [nameChange, setNameChange] = useState(pokemon.name);
+  const [nameChange, setNameChange] = useState("");
+  const [click, setClicked] = useState(true);
   const sessionData = JSON.parse(window.sessionStorage.getItem(page));
+
+  useEffect(() => {
+    setFavorite(pokemon.favorite ? pokemon.favorite : false);
+    setNameChange(pokemon.name);
+  }, [pokemon.favorite, pokemon.name]);
 
   const handleIconClick = async (e) => {
     e.stopPropagation();
@@ -64,7 +69,7 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
     setType(_type);
   };
   return (
-    <div key={uuid}>
+    <AccordionStyles key={uuid}>
       <Accordion
         expanded={expanded}
         onClick={handleAccordionClick}
@@ -78,7 +83,23 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
+          expandIcon={
+            <div style={{ position: "relative" }}>
+              <IconStyle>
+                <Icon style={{ color: favorite ? "blue" : "white" }}>
+                  <FavoriteIcon onClick={handleIconClick} />
+                </Icon>
+              </IconStyle>
+              <ExpandMoreIcon
+                style={{
+                  color: "black",
+                  position: "absolute",
+                  top: "46px",
+                  right: "10px",
+                }}
+              />
+            </div>
+          }
           aria-controls="panel1-content"
           id="panel1-header"
         >
@@ -87,6 +108,7 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
               filter: `drop-shadow(0 0 10px ${
                 colors[pokemon.types.split(",")[0]]
               })`,
+              marginRight: "20px",
             }}
           >
             <img
@@ -95,22 +117,17 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
               alt={pokemon.name}
             />
           </div>
+
           <div
             style={{
               display: "flex",
-              justifyContent: "space-evenly",
-              width: "100%",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignSelf: "center",
-                justifyContent: "center",
-                width: "200px",
-              }}
-            >
-              <form>
+            <div>
+              <form style={{ width: "auto" }}>
                 <label htmlFor="fname">Name:</label>
                 <input
                   name="fname"
@@ -120,6 +137,8 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
                     border: "none",
                     color: "black",
                     fontSize: "16px",
+                    width: "100px",
+                    cursor: "pointer",
                   }}
                   onBlur={handleBlur}
                   onMouseDown={(e) => {
@@ -137,30 +156,45 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
             <div
               style={{
                 display: "flex",
-                alignSelf: "center",
-                justifyContent: "center",
-                width: "200px",
+                flexDirection: "column",
+                width: "150px",
               }}
             >
-              <span>Species: </span>
-              <span>{pokemon.species}</span>
+              <div>Types:</div>
+              <div
+                style={{
+                  display: "flex",
+                  marginLeft: "-20px",
+                  marginTop: "10px",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                {pokemon.types &&
+                  pokemon.types.split(",").map((t, index) => {
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          border: "2px solid white",
+                          paddingTop: "5px",
+                          paddingBottom: "5px",
+                          width: "75px",
+                          borderRadius: "50%",
+                          textAlign: "center",
+                          height: "40px",
+                          marginLeft: "10px",
+                          backgroundColor: `${
+                            colors[pokemon.types.split(",")[0]]
+                          }`,
+                        }}
+                      >
+                        {t}
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignSelf: "center",
-                justifyContent: "center",
-                width: "200px",
-              }}
-            >
-              <span>Types: </span>
-              <span>{pokemon.types}</span>
-            </div>
-            <IconStyle>
-              <Icon style={{ color: favorite ? "blue" : "white" }}>
-                <ThumbUpIcon onClick={handleIconClick} />
-              </Icon>
-            </IconStyle>
           </div>
         </AccordionSummary>
         <AccordionDetails
@@ -171,47 +205,21 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
             pokemon={pokemon}
             type={type}
           />
-          {/* <div>
-            <div>
-              <div
-                style={{
-                  textAlign: "center",
-                  paddingBottom: "10px",
-                  textDecoration: "underline",
-                }}
-              >
-                Moves
-              </div>
-              <MovesCard moves={pokemon.moves} types={pokemon.types} />
-            </div>
-          </div>
-          <div>
-            <div>
-              <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-                Stats
-              </div>
-              <StatsCard data={pokemon.stats} types={pokemon.types} />
-            </div>
-          </div>
-          <div>
-            <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Info
-            </div>
-            <InfoCard
-              height={pokemon.height}
-              weight={pokemon.weight}
-              abilities={pokemon.abilities}
-              types={pokemon.types}
-            />
-          </div> */}
         </AccordionDetails>
       </Accordion>
-    </div>
+    </AccordionStyles>
   );
 };
 
 const IconStyle = styled.div`
-  display: flex;
-  align-self: center;
+  position: absolute;
+  top: -68px;
+  right: 10px;
+`;
+
+const AccordionStyles = styled.div`
+  .MuiAccordionSummary-expandIconWrapper.Mui-expanded {
+    transform: rotate(0deg);
+  }
 `;
 export default AccordionCard;

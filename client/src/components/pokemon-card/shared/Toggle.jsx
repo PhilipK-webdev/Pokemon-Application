@@ -7,7 +7,11 @@ const Toggle = ({ handleToggle, isToggle }) => {
     <ToogleStyle>
       <FormGroup>
         <FormControlLabel
-          style={{ pointerEvents: "none" }}
+          style={{
+            pointerEvents: "none",
+            color: "#3069B2",
+            fontWeight: "bold",
+          }}
           control={
             <Switch
               style={{ pointerEvents: "auto" }}

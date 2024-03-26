@@ -6,7 +6,7 @@ body{
     padding:0;
     margin: 0;
     // background: #fecd01;
-    background: #FEBF01;
+    background: #FDE767;
     color: black;
     font-family: "Zilla Slab", serif;
   font-weight: 300;

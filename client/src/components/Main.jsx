@@ -51,6 +51,7 @@ const Main = () => {
       const filteredFavoritePokemons = allPokemons.filter(
         (pokemon) => pokemon.favorite
       );
+      console.log(filteredFavoritePokemons);
       setAllPokemons(filteredFavoritePokemons);
     } else {
       setAllPokemons(temporaryAllPokemons);
@@ -74,7 +75,7 @@ const Main = () => {
 
 const MainStyle = styled.div`
   min-height: calc(100vh - 150px);
-  width: 90%;
+  width: 40%;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;

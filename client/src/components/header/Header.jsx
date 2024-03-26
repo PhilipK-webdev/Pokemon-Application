@@ -11,7 +11,7 @@ const HeaderStyle = styled.header`
   height: 50px;
   width: 100%;
   margin-top:10px;
-  color:#143d59;
+  color:#3069B2;
   display: flex;
   justify-content: center;
   align-items: center;
