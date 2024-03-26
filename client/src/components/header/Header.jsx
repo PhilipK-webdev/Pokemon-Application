@@ -10,12 +10,15 @@ const Header = () => {
 const HeaderStyle = styled.header`
   height: 50px;
   width: 100%;
-  background: #F6F8FA;
-  font-family:"Helvetica", Arial, sans-serif;
-  color:#FFCB03;
+  margin-top:10px;
+  color:#143d59;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+
   }
 `;
 

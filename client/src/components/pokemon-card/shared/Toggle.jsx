@@ -2,18 +2,28 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styled from "styled-components";
-const Toggle = () => {
+const Toggle = ({ handleToggle, isToggle }) => {
   return (
     <ToogleStyle>
       <FormGroup>
-        <FormControlLabel control={<Switch />} label="Sort By Favorite" />
+        <FormControlLabel
+          style={{ pointerEvents: "none" }}
+          control={
+            <Switch
+              style={{ pointerEvents: "auto" }}
+              onChange={handleToggle}
+              checked={isToggle}
+              value={isToggle}
+            />
+          }
+          label="Sort By Favorite"
+        />
       </FormGroup>
     </ToogleStyle>
   );
 };
 
 const ToogleStyle = styled.div`
-  width: 100%;
   padding-left: 10px;
   height: 50px;
 `;

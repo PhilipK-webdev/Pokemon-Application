@@ -39,8 +39,7 @@ async function addToFavorite(req, uuid, favorite) {
     const collection = database.collection(process.env.COLLECTION);
     const filter = { uuid: uuid };
     const updateData = { $set: { favorite: favorite } };
-    const pokemon = await collection.updateOne(filter, updateData);
-    return pokemon;
+    return await collection.updateOne(filter, updateData);
   } catch (error) {
     return new Error("Failed to fetch from DB");
   }

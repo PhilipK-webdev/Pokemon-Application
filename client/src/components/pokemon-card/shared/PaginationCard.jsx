@@ -1,10 +1,15 @@
 import Pagination from "@mui/material/Pagination";
 import styled from "styled-components";
-const PaginationCard = () => {
+const PaginationCard = ({ handlePagination }) => {
   return (
     <PaginationStyle>
       <div>
-        <Pagination count={10} color="primary" variant="outlined" />
+        <Pagination
+          count={10}
+          color="primary"
+          variant="outlined"
+          onChange={(event, pageNumber) => handlePagination(event, pageNumber)}
+        />
       </div>
     </PaginationStyle>
   );

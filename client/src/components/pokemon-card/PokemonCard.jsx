@@ -1,10 +1,10 @@
-import React from "react";
 import styled from "styled-components";
 import AccordionCard from "./shared/AccordionCard";
-const PokemonCard = () => {
+
+const PokemonCard = ({ pokemon, uuid, page }) => {
   return (
     <CardStyle>
-      <AccordionCard />
+      <AccordionCard pokemon={pokemon} uuid={uuid} page={page} />
     </CardStyle>
   );
 };
@@ -12,7 +12,6 @@ const PokemonCard = () => {
 const CardStyle = styled.div`
   width: 100%;
   height: auto;
-  // border: 1px solid green;
   padding: 5px;
 `;
 export default PokemonCard;
