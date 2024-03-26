@@ -9,14 +9,14 @@ async function stateService(req) {
 
 async function stateServiceByName(req) {
   const { uuid } = req.body;
-  // edit validation for name
+  // edit validation for uuid
   const responseByName = await repository.getStateByName(req, uuid);
   return responseByName;
 }
 
 async function addToFavService(req) {
   const { uuid, favorite } = req.body;
-  // edit validation for name
+  // edit validation for uuid and favorite
   const responseByName = await repository.addToFavorite(req, uuid, favorite);
   return responseByName;
 }
