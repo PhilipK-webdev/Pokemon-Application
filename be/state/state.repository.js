@@ -50,7 +50,27 @@ async function getStateByName(req, uuid) {
   }
 }
 
+async function addToFavorite(req, uuid, favorite) {
+  const client = new MongoClient(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  try {
+    await client.connect();
+    const database = client.db(process.env.DB);
+    const collection = database.collection(process.env.COLLECTION);
+    const filter = { uuid: uuid };
+    const updateData = { $set: { favorite: favorite } };
+    const pokemon = await collection.updateOne(filter, updateData);
+    return pokemon;
+  } catch (error) {
+    return new Error("Failed to fetch from DB");
+  }
+}
+
 module.exports = {
   getAllState,
   getStateByName,
+  addToFavorite,
 };

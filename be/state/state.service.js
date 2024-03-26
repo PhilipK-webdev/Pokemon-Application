@@ -14,7 +14,15 @@ async function stateServiceByName(req) {
   return responseByName;
 }
 
+async function addToFavService(req) {
+  const { uuid, favorite } = req.body;
+  // edit validation for name
+  const responseByName = await repository.addToFavorite(req, uuid, favorite);
+  return responseByName;
+}
+
 module.exports = {
   stateService,
   stateServiceByName,
+  addToFavService,
 };
