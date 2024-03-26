@@ -1,17 +1,15 @@
 const repository = require("./state.repository");
 
 async function stateService(req) {
-  const { page, limit } = req.query;
+  const { page, limit, offset } = req.query;
   // edit validation for page and limit
-  const repositoryResponse = await repository.getAllState(req, page, limit);
+  const repositoryResponse = await repository.getAllState(
+    req,
+    page,
+    limit,
+    offset
+  );
   return repositoryResponse;
-}
-
-async function stateServiceByName(req) {
-  const { uuid } = req.body;
-  // edit validation for uuid
-  const responseByName = await repository.getStateByName(req, uuid);
-  return responseByName;
 }
 
 async function addToFavService(req) {
@@ -23,6 +21,5 @@ async function addToFavService(req) {
 
 module.exports = {
   stateService,
-  stateServiceByName,
   addToFavService,
 };
