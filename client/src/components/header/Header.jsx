@@ -18,7 +18,6 @@ const HeaderStyle = styled.header`
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   font-style: normal;
-
   }
 `;
 

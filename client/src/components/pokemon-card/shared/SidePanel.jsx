@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const SidePanel = ({ onClick, type }) => {
@@ -37,14 +36,20 @@ const SidePanelStyles = styled.div`
     cursor: pointer;
     font-size: 20px;
     font-weight: 700;
+    @media (max-width: 900px) {
+      font-size: 15px;
+    }
   }
   .tab-clicked {
     cursor: pointer;
     font-size: 20px;
     font-weight: 700;
     text-decoration: underline;
-    text-decoration-color: white;
+    text-decoration-color: #3069b2;
     text-decoration-thickness: 3px;
+    @media (max-width: 900px) {
+      font-size: 15px;
+    }
   }
 `;
 

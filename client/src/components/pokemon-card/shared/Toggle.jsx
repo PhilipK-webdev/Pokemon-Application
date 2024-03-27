@@ -2,25 +2,23 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styled from "styled-components";
+import TooltipCustom from "./TooltipCustom";
 const Toggle = ({ handleToggle, isToggle }) => {
   return (
     <ToogleStyle>
       <FormGroup>
         <FormControlLabel
-          style={{
-            pointerEvents: "none",
-            color: "#3069B2",
-            fontWeight: "bold",
-          }}
+          className="form-controll"
           control={
-            <Switch
-              style={{ pointerEvents: "auto" }}
-              onChange={handleToggle}
-              checked={isToggle}
-              value={isToggle}
-            />
+            <TooltipCustom title={"Sort favorites pokemons"}>
+              <Switch
+                style={{ pointerEvents: "auto" }}
+                onChange={handleToggle}
+                checked={isToggle}
+                value={isToggle}
+              />
+            </TooltipCustom>
           }
-          label="Sort By Favorite"
         />
       </FormGroup>
     </ToogleStyle>
@@ -30,5 +28,11 @@ const Toggle = ({ handleToggle, isToggle }) => {
 const ToogleStyle = styled.div`
   padding-left: 10px;
   height: 50px;
+
+  .form-controll {
+    pointer-events: none;
+    color: #3069b2;
+    fontweight: bold;
+  }
 `;
 export default Toggle;

@@ -5,12 +5,12 @@ body{
     font-size:18px;
     padding:0;
     margin: 0;
-    // background: #fecd01;
     background: #FDE767;
     color: black;
     font-family: "Zilla Slab", serif;
-  font-weight: 300;
+    font-weight: 300;
     font-style: normal;
+    width:100%;
 }
 
 html{

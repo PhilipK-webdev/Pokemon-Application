@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 const { getAllPokemons } = require("../services/getAllPokemons");
 
-async function getAllState(req, page, limit, offset) {
+async function getAllState(req, page, limit) {
   const client = new MongoClient(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -27,18 +27,20 @@ async function getAllState(req, page, limit, offset) {
   }
 }
 
-async function addToFavorite(req, uuid, favorite) {
+async function editFields(req) {
   const client = new MongoClient(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
   try {
+    const { uuid, ...obj } = req.body;
     await client.connect();
     const database = client.db(process.env.DB);
     const collection = database.collection(process.env.COLLECTION);
     const filter = { uuid: uuid };
-    const updateData = { $set: { favorite: favorite } };
+    console.log("obj", obj);
+    const updateData = { $set: { ...obj } };
     return await collection.updateOne(filter, updateData);
   } catch (error) {
     return new Error("Failed to fetch from DB");
@@ -47,5 +49,5 @@ async function addToFavorite(req, uuid, favorite) {
 
 module.exports = {
   getAllState,
-  addToFavorite,
+  editFields,
 };

@@ -14,5 +14,11 @@ router.route("/fav").post(async (req, res) => {
     return res.json(result);
   } catch (error) {}
 });
+router.route("/edit").post(async (req, res) => {
+  try {
+    const result = await service.editName(req);
+    return res.json(result);
+  } catch (error) {}
+});
 
 module.exports = router;

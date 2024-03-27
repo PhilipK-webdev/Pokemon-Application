@@ -5,9 +5,8 @@ const PaginationCard = ({ handlePagination }) => {
     <PaginationStyle>
       <div>
         <Pagination
-          count={10}
+          count={Math.ceil(151 / 10)}
           color="primary"
-          variant="outlined"
           onChange={(event, pageNumber) => handlePagination(event, pageNumber)}
         />
       </div>
@@ -23,5 +22,16 @@ const PaginationStyle = styled.div`
   align-items: end;
   justify-content: flex-end;
   padding: 10px;
+  @media (max-width: 900px) {
+    justify-content: center;
+    width: auto;
+  }
+  .MuiPaginationItem-root {
+    color: #3069b2;
+
+    &.Mui-selected:hover {
+      background: #3069b2;
+    }
+  }
 `;
 export default PaginationCard;

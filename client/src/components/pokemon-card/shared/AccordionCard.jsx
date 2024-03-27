@@ -1,21 +1,19 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Icon } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { colors } from "../../../styles/colors";
 import Dashboard from "./Dashboard";
-import { useEffect } from "react";
+import TypesCard from "./TypesCard";
+import Form from "./Form";
+import IconsAccordion from "./IconsAccordion";
 
 const AccordionCard = ({ pokemon, uuid, page }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [type, setType] = useState("info");
   const [nameChange, setNameChange] = useState("");
-  const [click, setClicked] = useState(true);
   const sessionData = JSON.parse(window.sessionStorage.getItem(page));
 
   useEffect(() => {
@@ -58,10 +56,30 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
     setNameChange(e.target.value);
   };
 
-  const handleBlur = () => {
-    console.log(nameChange);
-    console.log("pokemon", pokemon);
-    // send the name to DB
+  const handleBlur = async () => {
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: nameChange, uuid: pokemon.uuid }),
+      };
+      const responseUpdate = await fetch("/api/state/edit", options);
+      if (responseUpdate.status === 200) {
+        setFavorite(!favorite);
+        sessionData.forEach((sData) => {
+          if (sData.uuid === pokemon.uuid) {
+            sData["name"] = nameChange;
+          }
+        });
+        window.sessionStorage.setItem(page, JSON.stringify(sessionData));
+        pokemon["name"] = nameChange;
+      }
+    } catch (error) {
+      console.error("Error edit the name of the pokemon:", error);
+    }
   };
 
   const handleDisplayMoreData = (e, _type) => {
@@ -73,32 +91,14 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
       <Accordion
         expanded={expanded}
         onClick={handleAccordionClick}
-        style={{
-          backgroundImage:
-            "-webkit-linear-gradient(45deg,#ff7878,#ffc898,#fff89a,#cdf2ca,#a2cdcd,#d1e8e4,#cab8ff)",
-          color: "black",
-          fontSize: "18px",
-          borderRadius: "10px",
-          boxShadow: "0px 1px 2px rgba(0, 0, 0, 10)",
-        }}
+        className="accordion"
       >
         <AccordionSummary
           expandIcon={
-            <div style={{ position: "relative" }}>
-              <IconStyle>
-                <Icon style={{ color: favorite ? "blue" : "white" }}>
-                  <FavoriteIcon onClick={handleIconClick} />
-                </Icon>
-              </IconStyle>
-              <ExpandMoreIcon
-                style={{
-                  color: "black",
-                  position: "absolute",
-                  top: "46px",
-                  right: "10px",
-                }}
-              />
-            </div>
+            <IconsAccordion
+              favorite={favorite}
+              handleIconClick={handleIconClick}
+            />
           }
           aria-controls="panel1-content"
           id="panel1-header"
@@ -111,95 +111,22 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
               marginRight: "20px",
             }}
           >
-            <img
-              style={{ width: "150px", height: "150px" }}
-              src={pokemon.url}
-              alt={pokemon.name}
-            />
+            <img className="image" src={pokemon.url} alt={pokemon.name} />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div>
-              <form style={{ width: "auto" }}>
-                <label htmlFor="fname">Name:</label>
-                <input
-                  name="fname"
-                  id="fname"
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    color: "black",
-                    fontSize: "16px",
-                    width: "100px",
-                    cursor: "pointer",
-                  }}
-                  onBlur={handleBlur}
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                  }}
-                  type="text"
-                  value={nameChange}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  onChange={handleChange}
-                />
-              </form>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "150px",
-              }}
-            >
-              <div>Types:</div>
-              <div
-                style={{
-                  display: "flex",
-                  marginLeft: "-20px",
-                  marginTop: "10px",
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                {pokemon.types &&
-                  pokemon.types.split(",").map((t, index) => {
-                    return (
-                      <div
-                        key={index}
-                        style={{
-                          border: "2px solid white",
-                          paddingTop: "5px",
-                          paddingBottom: "5px",
-                          width: "75px",
-                          borderRadius: "50%",
-                          textAlign: "center",
-                          height: "40px",
-                          marginLeft: "10px",
-                          backgroundColor: `${
-                            colors[pokemon.types.split(",")[0]]
-                          }`,
-                        }}
-                      >
-                        {t}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
+          <DataStyles>
+            <Form
+              handleChange={handleChange}
+              nameChange={nameChange}
+              handleBlur={handleBlur}
+            />
+            <TypesCard
+              types={pokemon.types}
+              bgColor={colors[pokemon.types.split(",")[0]]}
+            />
+          </DataStyles>
         </AccordionSummary>
-        <AccordionDetails
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
+        <AccordionDetails className="accordion-details">
           <Dashboard
             onClick={handleDisplayMoreData}
             pokemon={pokemon}
@@ -211,15 +138,86 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
   );
 };
 
-const IconStyle = styled.div`
-  position: absolute;
-  top: -68px;
-  right: 10px;
-`;
-
 const AccordionStyles = styled.div`
+  .accordion {
+    background-image: -webkit-linear-gradient(
+      45deg,
+      #ff7878,
+      #ffc898,
+      #fff89a,
+      #cdf2ca,
+      #a2cdcd,
+      #d1e8e4,
+      #cab8ff
+    );
+    color: black;
+    font-size: 18px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 10);
+    @media (max-width: 1025px) {
+      display: flex;
+      flex-direction: column;
+      background-color: black;
+    }
+  }
+
   .MuiAccordionSummary-expandIconWrapper.Mui-expanded {
     transform: rotate(0deg);
   }
+
+  .Mui-focusVisible {
+    background-color: transparent;
+  }
+  .input-name {
+    background-color: transparent;
+    border: none;
+    color: black;
+    font-size: 16px;
+    width: 100px;
+    cursor: pointer;
+    padding-left: 10px;
+
+    @media (max-width: 1025px) {
+      font-size: 13px;
+      width: 85px;
+    }
+  }
+
+  label {
+    @media (max-width: 1025px) {
+      font-size: 13px;
+    }
+  }
+
+  .expand-icon {
+    color: black;
+    position: absolute;
+    top: 46px;
+    right: 10px;
+    @media (max-width: 1025px) {
+      top: 40px;
+    }
+  }
+
+  .image {
+    width: 150px;
+    height: 150px;
+    @media (max-width: 1025px) {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .accordion-details {
+    display: flex;
+    justify-content: space-evenly;
+  }
+`;
+
+const DataStyles = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 export default AccordionCard;
