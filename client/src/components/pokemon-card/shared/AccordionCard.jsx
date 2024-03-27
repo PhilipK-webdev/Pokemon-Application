@@ -8,24 +8,31 @@ import Dashboard from "./Dashboard";
 import TypesCard from "./TypesCard";
 import NameForm from "./NameForm";
 import IconsAccordion from "./IconsAccordion";
+import {
+  usePokemonsContext,
+  usePokemonsUpdateContext,
+} from "../../../hooks/useCustomContext.jsx";
 
-const AccordionCard = ({ pokemon, uuid, page }) => {
+const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [type, setType] = useState("info");
   const [nameChange, setNameChange] = useState("");
-  const sessionData = JSON.parse(window.sessionStorage.getItem(page));
+  const { page, temporaryPokemonsData, isToggle } = usePokemonsContext();
+  const { setPokemonsData } = usePokemonsUpdateContext();
+  let sessionData = JSON.parse(window.sessionStorage.getItem(page));
 
   useEffect(() => {
     setNameChange(pokemon.name);
   }, [pokemon.name]);
 
   useEffect(() => {
-    setFavorite(pokemon.favorite ? pokemon.favorite : false);
-  }, [pokemon.favorite]);
+    setFavorite(pokemon.favorite);
+  }, [pokemon.favorite, favorite]);
 
   const handleIconClick = async (e) => {
     e.stopPropagation();
+    let favoriteTemp = favorite;
     try {
       const options = {
         method: "POST",
@@ -37,14 +44,31 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
       };
       const responseUpdate = await fetch("/api/state/fav", options);
       if (responseUpdate.status === 200) {
-        setFavorite(!favorite);
-        sessionData.forEach((sData) => {
-          if (sData.uuid === pokemon.uuid) {
-            sData["favorite"] = !favorite;
+        temporaryPokemonsData.forEach((pData) => {
+          if (pData.uuid === pokemon.uuid) {
+            pData["favorite"] = !favoriteTemp;
+            setFavorite(!favoriteTemp);
+            pokemon["favorite"] = !favoriteTemp;
           }
         });
-        window.sessionStorage.setItem(page, JSON.stringify(sessionData));
-        pokemon["favorite"] = !favorite;
+
+        window.sessionStorage.setItem(
+          page,
+          JSON.stringify(temporaryPokemonsData)
+        );
+        const _sessionData = JSON.parse(window.sessionStorage.getItem(page));
+
+        if (isToggle) {
+          const filteredPokemons = _sessionData.filter(
+            (pokemon) => pokemon.favorite
+          );
+          setPokemonsData(
+            filteredPokemons && filteredPokemons.length > 0
+              ? filteredPokemons
+              : _sessionData
+          );
+          setIsToggle(filteredPokemons && filteredPokemons.length > 0);
+        }
       }
     } catch (error) {
       console.error("Error update favorite pokemon:", error);

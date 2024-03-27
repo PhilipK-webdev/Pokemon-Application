@@ -1,45 +1,16 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "./pokemon-card/PokemonCard";
 import PaginationCard from "./pokemon-card/shared/PaginationCard";
 import ToggleAddFavorite from "./pokemon-card/shared/ToggleAddFavorite";
 import CustomSkeleton from "./pokemon-card/shared/CustomSkeleton";
-
+import {
+  usePokemonsContext,
+  usePokemonsUpdateContext,
+} from "../hooks/useCustomContext";
 const Main = () => {
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [pokemonsData, setAllPokemons] = useState([]);
-  const [temporaryPokemonsData, setTemporaryAllPokemons] = useState([]);
-  const [isToggle, setIsToggle] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const sessionData = JSON.parse(window.sessionStorage.getItem(page));
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/state?page=${page}&limit=${limit}`);
-        if (response.status === 200) {
-          const data = await response.json();
-          setAllPokemons(data);
-          setTemporaryAllPokemons(data);
-          window.sessionStorage.setItem(page, JSON.stringify(data));
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    if (sessionData && sessionData.length > 0) {
-      setAllPokemons(sessionData);
-      setTemporaryAllPokemons(sessionData);
-      setIsLoading(false);
-    } else {
-      fetchData();
-    }
-    // reset isToggle state for each page load
-    setIsToggle(false);
-  }, [limit, page, isLoading]);
+  const { page, pokemonsData, temporaryPokemonsData, isToggle, isLoading } =
+    usePokemonsContext();
+  const { setPage, setPokemonsData, setIsToggle } = usePokemonsUpdateContext();
 
   const handlePagination = (e, number) => {
     setPage(number);
@@ -53,19 +24,25 @@ const Main = () => {
         (pokemon) => pokemon.favorite
       );
     }
-    setAllPokemons(
+    setPokemonsData(
       filteredFavoritePokemons.length > 0
         ? filteredFavoritePokemons
         : temporaryPokemonsData
     );
     setIsToggle(checked);
   };
+
   return (
     <MainStyle>
       {!isLoading ? (
         <>
           <ToggleAddFavorite handleToggle={handleToggle} isToggle={isToggle} />
-          <PokemonCard page={page} pokemonsData={pokemonsData} />
+          <PokemonCard
+            page={page}
+            pokemonsData={pokemonsData}
+            isToggle={isToggle}
+            setIsToggle={setIsToggle}
+          />
         </>
       ) : (
         <CustomSkeleton />

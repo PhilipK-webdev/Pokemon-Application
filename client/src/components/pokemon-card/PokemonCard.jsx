@@ -1,14 +1,20 @@
 import styled from "styled-components";
 import AccordionCard from "./shared/AccordionCard";
 
-const PokemonCard = ({ pokemonsData, page }) => {
+const PokemonCard = ({ pokemonsData, page, isToggle, setIsToggle }) => {
   return (
     pokemonsData &&
     pokemonsData.length > 0 &&
     pokemonsData.map((pokemon) => {
       return (
         <CardStyle>
-          <AccordionCard pokemon={pokemon} uuid={pokemon.uuid} page={page} />
+          <AccordionCard
+            pokemon={pokemon}
+            uuid={pokemon.uuid}
+            page={page}
+            isToggle={isToggle}
+            setIsToggle={setIsToggle}
+          />
         </CardStyle>
       );
     })
