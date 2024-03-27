@@ -20,7 +20,7 @@ function PokemonsProvider({ children }) {
   const [temporaryPokemonsData, setTemporaryPokemonsData] = useState([]);
   const [isToggle, setIsToggle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [error, setErorr] = useState("");
   useEffect(() => {
     const sessionData = JSON.parse(window.sessionStorage.getItem(page));
     const fetchData = async () => {
@@ -33,6 +33,9 @@ function PokemonsProvider({ children }) {
           setTemporaryPokemonsData(data);
           window.sessionStorage.setItem(page, JSON.stringify(data));
           setIsLoading(false);
+        } else {
+          const err = await response.json();
+          setErorr(err);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -58,6 +61,7 @@ function PokemonsProvider({ children }) {
         isToggle,
         limit,
         isLoading,
+        error,
       }}
     >
       <UpdatePokemonsContext.Provider

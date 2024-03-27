@@ -7,9 +7,16 @@ import {
   usePokemonsContext,
   usePokemonsUpdateContext,
 } from "../hooks/useCustomContext";
+import CardMessage from "./pokemon-card/shared/CardMessage";
 const Main = () => {
-  const { page, pokemonsData, temporaryPokemonsData, isToggle, isLoading } =
-    usePokemonsContext();
+  const {
+    page,
+    pokemonsData,
+    temporaryPokemonsData,
+    isToggle,
+    isLoading,
+    error,
+  } = usePokemonsContext();
   const { setPage, setPokemonsData, setIsToggle } = usePokemonsUpdateContext();
 
   const handlePagination = (e, number) => {
@@ -44,14 +51,26 @@ const Main = () => {
             setIsToggle={setIsToggle}
           />
         </>
+      ) : error ? (
+        <CardMessage
+          text={error.error.charAt(0).toUpperCase() + error.error.slice(1)}
+        />
       ) : (
         <CustomSkeleton />
       )}
-      <PaginationCard
-        handlePagination={handlePagination}
-        page={page}
-        isLoading={isLoading}
-      />
+      {!pokemonsData.some((p) => p.favorite) && isToggle ? (
+        <CardMessage
+          text={
+            "No pokemons were added to the favorite lise, please click on the toggle button and select your favorite pokemons"
+          }
+        />
+      ) : (
+        <PaginationCard
+          handlePagination={handlePagination}
+          page={page}
+          isLoading={isLoading}
+        />
+      )}
     </MainStyle>
   );
 };

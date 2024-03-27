@@ -1,12 +1,12 @@
 const { MongoClient } = require("mongodb");
 const { getAllPokemons } = require("../services/getAllPokemons");
 
-async function getAllState(req, page, limit) {
-  const client = new MongoClient(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+const client = new MongoClient(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
+async function getAllState(req, page, limit) {
   try {
     await client.connect();
     const database = client.db(process.env.DB);
@@ -23,23 +23,17 @@ async function getAllState(req, page, limit) {
     const pokemonData = result.slice(startIndex, endIndex);
     return pokemonData;
   } catch (error) {
-    return new Error("Failed to fetch from DB");
+    throw error;
   }
 }
 
 async function editFields(req) {
-  const client = new MongoClient(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
   try {
-    const { uuid, ...obj } = req.body;
     await client.connect();
     const database = client.db(process.env.DB);
     const collection = database.collection(process.env.COLLECTION);
+    const { uuid, ...obj } = req.body;
     const filter = { uuid: uuid };
-    console.log("obj", obj);
     const updateData = { $set: { ...obj } };
     return await collection.updateOne(filter, updateData);
   } catch (error) {

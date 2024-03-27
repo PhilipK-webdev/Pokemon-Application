@@ -5,19 +5,26 @@ const PokemonCard = ({ pokemonsData, page, isToggle, setIsToggle }) => {
   return (
     pokemonsData &&
     pokemonsData.length > 0 &&
-    pokemonsData.map((pokemon) => {
-      return (
-        <CardStyle>
-          <AccordionCard
-            pokemon={pokemon}
-            uuid={pokemon.uuid}
-            page={page}
-            isToggle={isToggle}
-            setIsToggle={setIsToggle}
-          />
-        </CardStyle>
-      );
-    })
+    pokemonsData
+      .filter((p) => {
+        if (!isToggle) {
+          return true;
+        }
+        return p.favorite;
+      })
+      .map((pokemon) => {
+        return (
+          <CardStyle>
+            <AccordionCard
+              pokemon={pokemon}
+              uuid={pokemon.uuid}
+              page={page}
+              isToggle={isToggle}
+              setIsToggle={setIsToggle}
+            />
+          </CardStyle>
+        );
+      })
   );
 };
 
