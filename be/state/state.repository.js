@@ -33,11 +33,17 @@ async function editFields(req) {
     const database = client.db(process.env.DB);
     const collection = database.collection(process.env.COLLECTION);
     const { uuid, ...obj } = req.body;
+    const pokemonInfo = await collection
+      .find({ uuid }, { projection: { _id: 0 } })
+      .toArray();
+    if (!pokemonInfo || pokemonInfo.length === 0) {
+      return { error: "No pokemon found" };
+    }
     const filter = { uuid: uuid };
     const updateData = { $set: { ...obj } };
     return await collection.updateOne(filter, updateData);
   } catch (error) {
-    return new Error("Failed to fetch from DB");
+    throw error;
   }
 }
 

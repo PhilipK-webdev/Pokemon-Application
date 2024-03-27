@@ -3,7 +3,9 @@ const repository = require("./state.repository");
 async function stateService(req) {
   try {
     const { page, limit } = req.query;
-    // edit validation for page and limit
+    if (!page || !limit) {
+      return { error: "Invalid input" };
+    }
     const repositoryResponse = await repository.getAllState(req, page, limit);
     return repositoryResponse;
   } catch (error) {
@@ -14,7 +16,15 @@ async function stateService(req) {
 async function addToFavService(req) {
   try {
     const { uuid, favorite } = req.body;
-    // edit validation for uuid and favorite
+
+    if (
+      !uuid ||
+      !favorite ||
+      typeof uuid !== "string" ||
+      typeof favorite !== "boolean"
+    ) {
+      return { error: "Invalid input" };
+    }
     const responseFav = await repository.editFields(req);
     return responseFav;
   } catch (error) {
@@ -25,7 +35,14 @@ async function addToFavService(req) {
 async function editName(req) {
   try {
     const { uuid, name } = req.body;
-    // edit validation for uuid and favorite
+    if (
+      !uuid ||
+      !name ||
+      typeof uuid !== "string" ||
+      typeof name !== "string"
+    ) {
+      return { error: "Invalid input" };
+    }
     const responseEditName = await repository.editFields(req);
     return responseEditName;
   } catch (error) {

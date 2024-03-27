@@ -12,18 +12,23 @@ import {
   usePokemonsContext,
   usePokemonsUpdateContext,
 } from "../../../hooks/useCustomContext.jsx";
+import ImageCard from "./ImageCard.jsx";
 
-const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
+const AccordionCard = ({ pokemon }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [type, setType] = useState("info");
   const [nameChange, setNameChange] = useState("");
-  const { page, temporaryPokemonsData, isToggle } = usePokemonsContext();
-  const { setPokemonsData } = usePokemonsUpdateContext();
+  const [originalName, setOriginalName] = useState("");
+  const { page, temporaryPokemonsData, isToggleFavorite } =
+    usePokemonsContext();
+  const { setPokemonsData, setIsToggleFavorite, setErorr } =
+    usePokemonsUpdateContext();
   let sessionData = JSON.parse(window.sessionStorage.getItem(page));
 
   useEffect(() => {
     setNameChange(pokemon.name);
+    setOriginalName(pokemon.name);
   }, [pokemon.name]);
 
   useEffect(() => {
@@ -58,7 +63,7 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
         );
         const _sessionData = JSON.parse(window.sessionStorage.getItem(page));
 
-        if (isToggle) {
+        if (isToggleFavorite) {
           const filteredPokemons = _sessionData.filter(
             (pokemon) => pokemon.favorite
           );
@@ -67,8 +72,11 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
               ? filteredPokemons
               : _sessionData
           );
-          setIsToggle(filteredPokemons && filteredPokemons.length > 0);
+          setIsToggleFavorite(filteredPokemons && filteredPokemons.length > 0);
         }
+      } else {
+        const err = await responseUpdate.json();
+        setErorr(err);
       }
     } catch (error) {
       console.error("Error update favorite pokemon:", error);
@@ -84,6 +92,11 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
   };
 
   const handleBlur = async () => {
+    if (!nameChange.trim()) {
+      setNameChange(originalName);
+      return;
+    }
+
     try {
       const options = {
         method: "POST",
@@ -93,8 +106,8 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
         },
         body: JSON.stringify({ name: nameChange, uuid: pokemon.uuid }),
       };
-      const responseUpdate = await fetch("/api/state/edit", options);
-      if (responseUpdate.status === 200) {
+      const responseEdit = await fetch("/api/state/edit", options);
+      if (responseEdit.status === 200) {
         sessionData.forEach((sData) => {
           if (sData.uuid === pokemon.uuid) {
             sData["name"] = nameChange;
@@ -102,6 +115,9 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
         });
         window.sessionStorage.setItem(page, JSON.stringify(sessionData));
         pokemon["name"] = nameChange;
+      } else {
+        const err = await responseEdit.json();
+        setErorr(err);
       }
     } catch (error) {
       console.error("Error edit the name of the pokemon:", error);
@@ -113,7 +129,7 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
     setType(_type);
   };
   return (
-    <AccordionStyles key={uuid}>
+    <AccordionStyles>
       <Accordion
         expanded={expanded}
         onClick={handleAccordionClick}
@@ -130,16 +146,11 @@ const AccordionCard = ({ pokemon, uuid, setIsToggle }) => {
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <div
-            style={{
-              filter: `drop-shadow(0 0 10px ${
-                colors[pokemon.types.split(",")[0]]
-              })`,
-              marginRight: "20px",
-            }}
-          >
-            <img className="image" src={pokemon.url} alt={pokemon.name} />
-          </div>
+          <ImageCard
+            filterColor={colors[pokemon.types.split(",")[0]]}
+            url={pokemon.url}
+            name={pokemon.name}
+          />
 
           <DataStyles>
             <NameForm

@@ -18,7 +18,7 @@ function PokemonsProvider({ children }) {
   const [limit, setLimit] = useState(10);
   const [pokemonsData, setPokemonsData] = useState([]);
   const [temporaryPokemonsData, setTemporaryPokemonsData] = useState([]);
-  const [isToggle, setIsToggle] = useState(false);
+  const [isToggleFavorite, setIsToggleFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setErorr] = useState("");
   useEffect(() => {
@@ -48,8 +48,6 @@ function PokemonsProvider({ children }) {
     } else {
       fetchData();
     }
-    // reset isToggle state for each page load
-    // setIsToggle(false);
   }, [limit, page, isLoading]);
 
   return (
@@ -58,7 +56,7 @@ function PokemonsProvider({ children }) {
         page,
         pokemonsData,
         temporaryPokemonsData,
-        isToggle,
+        isToggleFavorite,
         limit,
         isLoading,
         error,
@@ -69,7 +67,8 @@ function PokemonsProvider({ children }) {
           setPage,
           setPokemonsData,
           setTemporaryPokemonsData,
-          setIsToggle,
+          setIsToggleFavorite,
+          setErorr,
         }}
       >
         {children}

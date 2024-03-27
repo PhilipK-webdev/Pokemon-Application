@@ -13,11 +13,12 @@ const Main = () => {
     page,
     pokemonsData,
     temporaryPokemonsData,
-    isToggle,
+    isToggleFavorite,
     isLoading,
     error,
   } = usePokemonsContext();
-  const { setPage, setPokemonsData, setIsToggle } = usePokemonsUpdateContext();
+  const { setPage, setPokemonsData, setIsToggleFavorite } =
+    usePokemonsUpdateContext();
 
   const handlePagination = (e, number) => {
     setPage(number);
@@ -36,29 +37,31 @@ const Main = () => {
         ? filteredFavoritePokemons
         : temporaryPokemonsData
     );
-    setIsToggle(checked);
+    setIsToggleFavorite(checked);
   };
 
   return (
     <MainStyle>
-      {!isLoading ? (
-        <>
-          <ToggleAddFavorite handleToggle={handleToggle} isToggle={isToggle} />
-          <PokemonCard
-            page={page}
-            pokemonsData={pokemonsData}
-            isToggle={isToggle}
-            setIsToggle={setIsToggle}
-          />
-        </>
-      ) : error ? (
+      {error ? (
         <CardMessage
           text={error.error.charAt(0).toUpperCase() + error.error.slice(1)}
         />
+      ) : !isLoading ? (
+        <>
+          <ToggleAddFavorite
+            handleToggle={handleToggle}
+            isToggleFavorite={isToggleFavorite}
+          />
+          <PokemonCard
+            page={page}
+            pokemonsData={pokemonsData}
+            isToggleFavorite={isToggleFavorite}
+          />
+        </>
       ) : (
         <CustomSkeleton />
       )}
-      {!pokemonsData.some((p) => p.favorite) && isToggle ? (
+      {!pokemonsData.some((p) => p.favorite) && isToggleFavorite ? (
         <CardMessage
           text={
             "No pokemons were added to the favorite lise, please click on the toggle button and select your favorite pokemons"
@@ -68,7 +71,7 @@ const Main = () => {
         <PaginationCard
           handlePagination={handlePagination}
           page={page}
-          isLoading={isLoading}
+          isLoading={isLoading || error ? true : false}
         />
       )}
     </MainStyle>
