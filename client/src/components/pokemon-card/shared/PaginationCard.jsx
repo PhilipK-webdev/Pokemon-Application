@@ -1,12 +1,13 @@
 import Pagination from "@mui/material/Pagination";
 import styled from "styled-components";
-const PaginationCard = ({ handlePagination }) => {
+const PaginationCard = ({ handlePagination, isLoading }) => {
   return (
     <PaginationStyle>
       <div>
         <Pagination
           count={Math.ceil(151 / 10)}
           color="primary"
+          disabled={isLoading}
           onChange={(event, pageNumber) => handlePagination(event, pageNumber)}
         />
       </div>

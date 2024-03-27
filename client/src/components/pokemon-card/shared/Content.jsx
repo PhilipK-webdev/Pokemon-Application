@@ -1,53 +1,57 @@
 import styled from "styled-components";
 
+const RenderData = ({ type, pokemon }) => {
+  let component;
+  switch (type) {
+    case "info":
+      component = (
+        <InfoStyles>
+          <InfoTitle>Info</InfoTitle>
+          <div className="info-row">Species: {pokemon.species}</div>
+          <div className="info-row">Height: {pokemon.height}m</div>
+          <div className="info-row">Weight: {pokemon.weight}kg</div>
+          <div className="info-row">Abilities: {pokemon.abilities}</div>
+        </InfoStyles>
+      );
+      break;
+    case "stats":
+      component = (
+        <StatsStyles>
+          <StatsTitle>Stats</StatsTitle>
+          {pokemon.stats &&
+            pokemon.stats.length > 0 &&
+            pokemon.stats.map((d, indexD) => {
+              return (
+                <div key={indexD} className="stats-row">
+                  {d.name}: {d.base}
+                </div>
+              );
+            })}
+        </StatsStyles>
+      );
+      break;
+    case "moves":
+      component = (
+        <MovesStyles>
+          <MovesTitle>Moves</MovesTitle>
+          <p> {pokemon.moves.join(", ")}</p>
+        </MovesStyles>
+      );
+      break;
+
+    default:
+      break;
+  }
+
+  return <>{component}</>;
+};
+
 const Content = ({ type, pokemon }) => {
-  const renderData = () => {
-    let component;
-    switch (type) {
-      case "info":
-        component = (
-          <InfoStyles>
-            <InfoTitle>Info</InfoTitle>
-            <div className="info-row">Species: {pokemon.species}</div>
-            <div className="info-row">Height: {pokemon.height}m</div>
-            <div className="info-row">Weight: {pokemon.weight}kg</div>
-            <div className="info-row">Abilities: {pokemon.abilities}</div>
-          </InfoStyles>
-        );
-        break;
-      case "stats":
-        component = (
-          <StatsStyles>
-            <StatsTitle>Stats</StatsTitle>
-            {pokemon.stats &&
-              pokemon.stats.length > 0 &&
-              pokemon.stats.map((d, indexD) => {
-                return (
-                  <div key={indexD} className="stats-row">
-                    {d.name}: {d.base}
-                  </div>
-                );
-              })}
-          </StatsStyles>
-        );
-        break;
-      case "moves":
-        component = (
-          <MovesStyles>
-            <MovesTitle>Moves</MovesTitle>
-            <p> {pokemon.moves.join(", ")}</p>
-          </MovesStyles>
-        );
-        break;
-
-      default:
-        break;
-    }
-
-    return component;
-  };
-
-  return <ContentStyles>{renderData()}</ContentStyles>;
+  return (
+    <ContentStyles>
+      <RenderData type={type} pokemon={pokemon} />
+    </ContentStyles>
+  );
 };
 
 const ContentStyles = styled.div`
@@ -137,4 +141,5 @@ const MovesTitle = styled.div`
     font-size: 20px;
   }
 `;
-export default Content;
+
+export { Content };

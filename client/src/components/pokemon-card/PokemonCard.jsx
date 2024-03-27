@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import AccordionCard from "./shared/AccordionCard";
 
-const PokemonCard = ({ pokemon, uuid, page }) => {
+const PokemonCard = ({ pokemonsData, page }) => {
   return (
-    <CardStyle>
-      <AccordionCard pokemon={pokemon} uuid={uuid} page={page} />
-    </CardStyle>
+    pokemonsData &&
+    pokemonsData.length > 0 &&
+    pokemonsData.map((pokemon) => {
+      return (
+        <CardStyle>
+          <AccordionCard pokemon={pokemon} uuid={pokemon.uuid} page={page} />
+        </CardStyle>
+      );
+    })
   );
 };
 

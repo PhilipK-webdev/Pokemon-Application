@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "./pokemon-card/PokemonCard";
 import PaginationCard from "./pokemon-card/shared/PaginationCard";
-import Toggle from "./pokemon-card/shared/Toggle";
-import Skeleton from "@mui/material/Skeleton";
-import { useMediaQuery } from "@mui/material";
+import ToggleAddFavorite from "./pokemon-card/shared/ToggleAddFavorite";
+import CustomSkeleton from "./pokemon-card/shared/CustomSkeleton";
 
 const Main = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [allPokemons, setAllPokemons] = useState([]);
-  const [temporaryAllPokemons, setTemporaryAllPokemons] = useState([]);
+  const [pokemonsData, setAllPokemons] = useState([]);
+  const [temporaryPokemonsData, setTemporaryAllPokemons] = useState([]);
   const [isToggle, setIsToggle] = useState(false);
-  const mobile = useMediaQuery("(max-width:1250px)");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const sessionData = JSON.parse(window.sessionStorage.getItem(page));
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`/api/state?page=${page}&limit=${limit}`);
         if (response.status === 200) {
@@ -24,7 +24,7 @@ const Main = () => {
           setAllPokemons(data);
           setTemporaryAllPokemons(data);
           window.sessionStorage.setItem(page, JSON.stringify(data));
-          setIsToggle(false);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -33,11 +33,13 @@ const Main = () => {
     if (sessionData && sessionData.length > 0) {
       setAllPokemons(sessionData);
       setTemporaryAllPokemons(sessionData);
-      setIsToggle(false);
+      setIsLoading(false);
     } else {
       fetchData();
     }
-  }, [limit, page]);
+    // reset isToggle state for each page load
+    setIsToggle(false);
+  }, [limit, page, isLoading]);
 
   const handlePagination = (e, number) => {
     setPage(number);
@@ -47,62 +49,32 @@ const Main = () => {
     const { checked } = e.target;
     let filteredFavoritePokemons = [];
     if (checked) {
-      filteredFavoritePokemons = allPokemons.filter(
+      filteredFavoritePokemons = pokemonsData.filter(
         (pokemon) => pokemon.favorite
       );
     }
     setAllPokemons(
       filteredFavoritePokemons.length > 0
         ? filteredFavoritePokemons
-        : temporaryAllPokemons
+        : temporaryPokemonsData
     );
     setIsToggle(checked);
   };
   return (
     <MainStyle>
-      {allPokemons && allPokemons.length > 0 ? (
+      {!isLoading ? (
         <>
-          <Toggle handleToggle={handleToggle} isToggle={isToggle} />
-          {allPokemons &&
-            allPokemons.length > 0 &&
-            allPokemons.map((pokemon) => {
-              return (
-                <PokemonCard
-                  pokemon={pokemon}
-                  uuid={pokemon.uuid}
-                  page={page}
-                />
-              );
-            })}
-          <PaginationCard handlePagination={handlePagination} page={page} />
+          <ToggleAddFavorite handleToggle={handleToggle} isToggle={isToggle} />
+          <PokemonCard page={page} pokemonsData={pokemonsData} />
         </>
       ) : (
-        <>
-          <Skeleton
-            variant="rounded"
-            width={150}
-            height={50}
-            style={{ marginLeft: "10px" }}
-          />
-          {Array.from({ length: 10 }, (_, index) => (
-            <Skeleton
-              variant="rounded"
-              width={mobile ? 400 : 800}
-              height={mobile ? 120 : 193}
-              key={index}
-              className="skeleton-pokemons"
-            />
-          ))}
-          <div style={{ position: "relative" }}>
-            <Skeleton
-              variant="rounded"
-              width={210}
-              height={60}
-              style={{ position: "absolute", left: "600px" }}
-            />
-          </div>
-        </>
+        <CustomSkeleton />
       )}
+      <PaginationCard
+        handlePagination={handlePagination}
+        page={page}
+        isLoading={isLoading}
+      />
     </MainStyle>
   );
 };

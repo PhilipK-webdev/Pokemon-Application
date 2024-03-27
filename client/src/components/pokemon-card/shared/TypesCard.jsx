@@ -7,7 +7,7 @@ const TypesCard = ({ types, bgColor }) => {
         {types &&
           types.split(",").map((t, index) => {
             return (
-              <Elipse key={index} bgColor={bgColor}>
+              <Elipse key={index} color={bgColor}>
                 {t}
               </Elipse>
             );
@@ -47,7 +47,7 @@ const Elipse = styled.div`
   text-align: center;
   height: 40px;
   margin-left: 10px;
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.color};
 
   @media (max-width: 1025px) {
     font-size: 15px;

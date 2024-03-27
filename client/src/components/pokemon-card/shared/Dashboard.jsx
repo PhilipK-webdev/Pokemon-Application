@@ -1,7 +1,6 @@
-import React from "react";
 import styled from "styled-components";
 import SidePanel from "./SidePanel";
-import Content from "./Content";
+import { Content } from "./Content";
 const Dashboard = ({ onClick, pokemon, type }) => {
   return (
     <DashboardStyles>

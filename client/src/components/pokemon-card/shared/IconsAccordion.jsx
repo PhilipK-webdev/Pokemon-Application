@@ -1,20 +1,21 @@
-import React from "react";
 import styled from "styled-components";
 import TooltipCustom from "./TooltipCustom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Icon } from "@mui/material";
-const IconsAccordion = ({ favorite, handleIconClick }) => {
+const IconsAccordion = ({ favorite, handleIconClick, expanded }) => {
   return (
     <div style={{ position: "relative" }}>
       <IconStyle>
-        <TooltipCustom title={"Add to favorite"}>
+        <TooltipCustom
+          title={favorite ? "Remove from favorite" : "Add to favorite"}
+        >
           <Icon style={{ color: favorite ? "blue" : "white" }}>
             <FavoriteIcon onClick={handleIconClick} />
           </Icon>
         </TooltipCustom>
       </IconStyle>
-      <TooltipCustom title={"Open card"}>
+      <TooltipCustom title={expanded ? "Close card" : "Open card"}>
         <ExpandMoreIcon className="expand-icon" />
       </TooltipCustom>
     </div>

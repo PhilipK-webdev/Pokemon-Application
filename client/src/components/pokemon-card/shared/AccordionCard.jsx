@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { colors } from "../../../styles/colors";
 import Dashboard from "./Dashboard";
 import TypesCard from "./TypesCard";
-import Form from "./Form";
+import NameForm from "./NameForm";
 import IconsAccordion from "./IconsAccordion";
 
 const AccordionCard = ({ pokemon, uuid, page }) => {
@@ -17,9 +17,12 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
   const sessionData = JSON.parse(window.sessionStorage.getItem(page));
 
   useEffect(() => {
-    setFavorite(pokemon.favorite ? pokemon.favorite : false);
     setNameChange(pokemon.name);
-  }, [pokemon.favorite, pokemon.name]);
+  }, [pokemon.name]);
+
+  useEffect(() => {
+    setFavorite(pokemon.favorite ? pokemon.favorite : false);
+  }, [pokemon.favorite]);
 
   const handleIconClick = async (e) => {
     e.stopPropagation();
@@ -68,7 +71,6 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
       };
       const responseUpdate = await fetch("/api/state/edit", options);
       if (responseUpdate.status === 200) {
-        setFavorite(!favorite);
         sessionData.forEach((sData) => {
           if (sData.uuid === pokemon.uuid) {
             sData["name"] = nameChange;
@@ -96,6 +98,7 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
         <AccordionSummary
           expandIcon={
             <IconsAccordion
+              expanded={expanded}
               favorite={favorite}
               handleIconClick={handleIconClick}
             />
@@ -115,7 +118,7 @@ const AccordionCard = ({ pokemon, uuid, page }) => {
           </div>
 
           <DataStyles>
-            <Form
+            <NameForm
               handleChange={handleChange}
               nameChange={nameChange}
               handleBlur={handleBlur}

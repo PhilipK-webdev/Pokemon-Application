@@ -1,6 +1,6 @@
 import TooltipCustom from "./TooltipCustom";
 
-const Form = ({ handleChange, nameChange, handleBlur }) => {
+const NameForm = ({ handleChange, nameChange, handleBlur }) => {
   return (
     <div>
       <form style={{ width: "auto" }}>
@@ -27,4 +27,4 @@ const Form = ({ handleChange, nameChange, handleBlur }) => {
   );
 };
 
-export default Form;
+export default NameForm;

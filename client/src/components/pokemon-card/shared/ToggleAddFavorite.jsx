@@ -3,14 +3,16 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styled from "styled-components";
 import TooltipCustom from "./TooltipCustom";
-const Toggle = ({ handleToggle, isToggle }) => {
+const ToggleAddFavorite = ({ handleToggle, isToggle }) => {
   return (
     <ToogleStyle>
       <FormGroup>
         <FormControlLabel
           className="form-controll"
           control={
-            <TooltipCustom title={"Sort favorites pokemons"}>
+            <TooltipCustom
+              title={isToggle ? "Show Favorites Pokemons" : "Show All Pokemons"}
+            >
               <Switch
                 style={{ pointerEvents: "auto" }}
                 onChange={handleToggle}
@@ -35,4 +37,4 @@ const ToogleStyle = styled.div`
     fontweight: bold;
   }
 `;
-export default Toggle;
+export default ToggleAddFavorite;
