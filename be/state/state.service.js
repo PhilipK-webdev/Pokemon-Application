@@ -17,12 +17,7 @@ async function addToFavService(req) {
   try {
     const { uuid, favorite } = req.body;
 
-    if (
-      !uuid ||
-      !favorite ||
-      typeof uuid !== "string" ||
-      typeof favorite !== "boolean"
-    ) {
+    if (!uuid || typeof uuid !== "string" || typeof favorite !== "boolean") {
       return { error: "Invalid input" };
     }
     const responseFav = await repository.editFields(req);

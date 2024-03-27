@@ -64,7 +64,7 @@ const Main = () => {
       {!pokemonsData.some((p) => p.favorite) && isToggleFavorite ? (
         <CardMessage
           text={
-            "No pokemons were added to the favorite lise, please click on the toggle button and select your favorite pokemons"
+            "No pokemons were added to the favorite list, please click on the toggle button and select your favorite pokemons"
           }
         />
       ) : (
