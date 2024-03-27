@@ -1,0 +1,97 @@
+{
+  "info": {
+    "_postman_id": "00ae30a0-1580-44d5-8f05-0ff8c9e47431",
+    "name": "PokemonAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "getData",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/state?page=1&limit=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "state"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "back",
+              "value": "true",
+              "disabled": true
+            },
+            {
+              "key": "isPagination",
+              "value": "true",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "editByName",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"uuid\":\"9e9a8693-92a4-4678-9c59-55d69390de4e\", \"name\":\"Balba\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/state/edit",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "state", "edit"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "addToFav",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"uuid\":\"e53a81ba-bcc2-4389-bd1f-fe6434396bef\",\"favorite\":true }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/state/fav",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "state", "fav"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
