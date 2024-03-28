@@ -25,6 +25,17 @@ const CardMessageStyles = styled.div`
     justify-content: center;
     min-width: 275px;
     margin-top: 20px;
+    border-radius: 10px;
+    background-image: -webkit-linear-gradient(
+      45deg,
+      #ff7878,
+      #ffc898,
+      #fff89a,
+      #cdf2ca,
+      #a2cdcd,
+      #d1e8e4,
+      #cab8ff
+    );
   }
   h1 {
     text-align: center;

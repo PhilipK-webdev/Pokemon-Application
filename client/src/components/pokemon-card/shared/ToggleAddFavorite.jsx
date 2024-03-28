@@ -13,8 +13,8 @@ const ToggleAddFavorite = ({ handleToggle, isToggleFavorite }) => {
             <TooltipCustom
               title={
                 isToggleFavorite
-                  ? "Show Favorites Pokemons"
-                  : "Show All Pokemons"
+                  ? "Show All Pokemons"
+                  : "Show Favorites Pokemons"
               }
             >
               <Switch
